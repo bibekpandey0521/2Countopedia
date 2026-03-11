@@ -1,27 +1,81 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import attackImage from "./images/attack.png";
+import defenceImg from './images/defend.png'
 function Counter() {
 
-    const [count, setCount] = useState(0);
+    let [count, setCount] = useState(0);
+    let [gameStatus, setGameStatus] = useState("");
     function handleIncrement() {
-        // setCount(count + 1)
+        const newValue = count + 1;
+        setCount(newValue);
 
-        setCount((prev) => prev + 1)
-        // console.log(count);
+        
     }
     function handleDecrement() {
-        setCount(count - 1)
-        setCount((prev) => prev - 1);
-        // console.log(count);
+        const newValue = count - 1;
+        setCount(newValue);
+        
+    }
+    useEffect(() => {
+        if (count <= -5) {
+            setGameStatus("You Lost!!!")
+        } else if (count >= 5) {
+            setGameStatus("You Won!!")
+        }
+        else {
+            setGameStatus("")
+        }
+    }, [count]);
+    function handleRandomPlay() {
+
+        const playMode = Math.round(Math.random())
+        if (playMode == 0) {
+            handleIncrement();
+        } else {
+            handleDecrement();
+        }
+    }
+    function handleReset() {
+        setCount(0);
+    }
+    function handleLog() {
+        console.log(count);
     }
     return (
-        <div className="row text-white container-fluid">
-            Counter : {count}
-            <button onClick={handleIncrement} className="btn btn-success m-2">
-                +1
-            </button>
-            <button onClick={handleDecrement} className="btn btn-danger m-2">
-                -1
-            </button>
+        <div className="container">
+            <div className="row text-white text-center">
+                <h1>Game Score: {count} </h1>
+                <p>You win at +5 points and loose at -5 points!</p>
+                {/* {gameStatus.length > 0 && <h3>Game Status: {gameStatus} </h3>} */}
+                {gameStatus.length > 0 ? <h3>Game Status: {gameStatus} </h3> : null }
+                <div className="col-6 col-md-3 offset-md-3">
+                    <img src={attackImage}
+                        style={{
+                            width: "100%",
+                            cursor: "pointer",
+                            border: "1px solid green"
+                        }}
+                        className="p-4 rounded">
+                    </img>
+                </div>
+                <div className="col-6 col-md-3 offset-md-3">
+                    <img src={defenceImg}
+                        style={{
+                            width: "100%",
+                            cursor: "pointer",
+                            border: "1px solid red"
+                        }}
+                        className="p-4 rounded">
+                    </img>
+                </div>
+                <div className="col-12 col-md-4 offset-md-4">
+                    <button className="btn btn-success m-2 w-100" onClick={handleRandomPlay}>Random Play</button>
+                    <br />
+                    <button className="btn btn-danger m-2 w-100" onClick={handleReset}>Reset</button>
+                    <br />
+                    <button className="btn btn-danger m-2 w-100" onClick={handleLog}>Log</button>
+                </div>
+            </div>
         </div>
     );
 }
